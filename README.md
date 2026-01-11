@@ -1,2 +1,2 @@
-# Grokking Machine Learning by Aditya Y Bhargava
+# Grokking Machine Learning by Luis Serrano
 Here's just practicing this book
