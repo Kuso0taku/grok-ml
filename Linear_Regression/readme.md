@@ -29,6 +29,7 @@ Just move `k` (angle) and `b` (y-intersection) a little to every points separate
 So if we add `p-p''` to `b`, line will always move to point.  
 3. In the *Simple Way* scenarios 1 or 3, we rotate the line *counterclockwise*. Otherwise - *clockwise*.
 4. If `(r, p)` on the right from vertical axis, **r > 0**. Otherwise - **r < 0**.  
+
 Consider that `r(p-p'')` **> 0**, when `r`, `p-p''` **BOTH > 0 or < 0**. This is what we want (*scenarios 1, 3*). Similarly `r(p-p'')` **< 0** in *scenarios 2, 4*.  
 #### IN:
 - the line with angle `m`, y-intersection `b` and equation `p'' = mr + b`
