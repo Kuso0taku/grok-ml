@@ -10,16 +10,17 @@ class Linear_regression:
 
     # Simple method (note that here's rate1 == rate2 so it's just rate)
     def _simple_trick(self, price_per_room, base_price, rooms, price):
-        if rooms > 0 and price > 0:
+        predicted_price = price_per_room * rooms + base_price
+        if rooms > 0 and price > predicted_price:
             price_per_room += self.rate # or rate1
             base_price += self.rate # or rate2
-        elif rooms > 0 and price < 0:
+        elif rooms > 0 and price < predicted_price:
             price_per_room -= self.rate 
             base_price -= self.rate 
-        elif rooms < 0 and price > 0:
+        elif rooms < 0 and price > predicted_price:
             price_per_room -= self.rate 
-            base_price += base_price
-        elif rooms < 0 and price < 0:
+            base_price += self.rate
+        elif rooms < 0 and price < predicted_price:
             price_per_room += self.rate 
             base_price -= self.rate
         return price_per_room, base_price
