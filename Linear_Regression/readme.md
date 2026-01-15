@@ -37,7 +37,7 @@ Consider that `r(p-p'')` **> 0**, when `r`, `p-p''` **BOTH > 0 or < 0**. This is
 - a little `n` (speed of learning)
 #### Algorithm:
 - add `nr(p-p'')` to angle `m` equals `m' = m + nr(p-p'')` (the line rotates)
-- add `nr(p-p'')` to y-intersection `b` equals `b' = b + n(p-p'')` (it moves the line)
+- add `n(p-p'')` to y-intersection `b` equals `b' = b + n(p-p'')` (it moves the line)
 #### OUT:
 - line `p'' = m'r + b'`
 
