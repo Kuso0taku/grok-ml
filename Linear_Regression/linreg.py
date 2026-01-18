@@ -1,5 +1,6 @@
 # to generate random k, b
 from random import random, randint
+from numpy import dot
 
 # class with different types of Linear Regression 
 class Linear_regression:
@@ -7,46 +8,60 @@ class Linear_regression:
     def __init__ (self, rate=0.1, method=2):
         self.rate = rate
         self.method = method
+        self.W = None
+        self.b = None
 
-    # Simple method (note that here's rate1 == rate2 so it's just rate)
-    def _simple_trick(self, price_per_room, base_price, rooms, price):
-        predicted_price = price_per_room * rooms + base_price
-        if rooms > 0 and price > predicted_price:
-            price_per_room += self.rate # or rate1
-            base_price += self.rate # or rate2
-        elif rooms > 0 and price < predicted_price:
-            price_per_room -= self.rate 
-            base_price -= self.rate 
-        elif rooms < 0 and price > predicted_price:
-            price_per_room -= self.rate 
-            base_price += self.rate
-        elif rooms < 0 and price < predicted_price:
-            price_per_room += self.rate 
-            base_price -= self.rate
-        return price_per_room, base_price
+    # Simple method
+    def _simple_trick(self, features, label):
+        y_hat = dot(self.W, features) + self.b
+        
+        if label > y_hat:
+            self.b += self.rate 
+            for i in range(len(features)):
+                if features[i] > 0:
+                    self.W[i] += self.rate
+                else:
+                    self.W[i] -= self.rate
+        else:
+            self.b -= self.rate
+            for i in range(len(features)):
+                if features[i] > 0:
+                    self.W[i] -= self.rate
+                else:
+                    self.W[i] += self.rate
+
+        return self.W, self.b
 
     # Quadratic method 
-    def _quad_trick(self, price_per_room, base_price, rooms, price):
-        predicted_price = price_per_room * rooms + base_price
-        price_per_room += self.rate * rooms * (price - predicted_price)
-        base_price += self.rate * (price - predicted_price)
-        return price_per_room, base_price
+    def _quad_trick(self, features, label):
+        y_hat = dot(self.W, features) + self.b
+        diff = label - y_hat 
+
+        self.b += self.rate * diff 
+        for i in range(len(features)):
+            self.W[i] += self.rate * features[i] * diff
+
+        return self.W, self.b
 
     # Absolute method
-    def _absolute_trick(self, price_per_room, base_price, rooms, price):
-        predicted_price = price_per_room * rooms + base_price
-        if price > predicted_price:
-            price_per_room += self.rate * rooms 
-            base_price += self.rate 
+    def _absolute_trick(self, features, label):
+        y_hat = dot(self.W, features) + self.b
+
+        if label > y_hat:
+            self.b += self.rate
+            for i in range(len(features)):
+                self.W[i] += self.rate * features[i]
         else:
-            price_per_room -= self.rate * rooms 
-            base_price -= self.rate 
-        return price_per_room, base_price
+            self.b -= self.rate
+            for i in range(len(features)):
+                self.W[i] -= self.rate * features[i]
+
+        return self.W, self.b
 
     # linear regression
     def fit(self, features, labels, epochs=10000):
-        self.price_per_room = random()
-        self.base_price = random()
+        self.b = random()
+        self.W = [random() for _ in features[0]]
 
         if self.method == 0: trick = self._simple_trick
         elif self.method == 1: trick = self._quad_trick
@@ -54,16 +69,17 @@ class Linear_regression:
 
         for epoch in range(epochs):
             i = randint(0, len(features)-1)
-            rooms = features[i]
-            price = labels[i]
-            self.price_per_room, self.base_price = trick(
-                    self.price_per_room, self.base_price, rooms, price)
+            X = features[i]
+            y = labels[i]
+
+            trick(X, y)
+
         return self
 
     # prediction
-    def predict(self, rooms):
-        return self.price_per_room * rooms + self.base_price
+    def predict(self, features):
+        return dot(self.W, features) + self.b
 
     # get parameters
     def get_params(self):
-        return self.price_per_room, self.base_price
+        return self.W, self.b
